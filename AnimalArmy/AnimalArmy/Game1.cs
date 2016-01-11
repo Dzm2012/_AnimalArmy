@@ -42,8 +42,8 @@ namespace AnimalArmy
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             banana = new GameObjects.Image(Content, "FAGNANA");
-            spriteBirds = new GameObjects.Sprites(Content, "birdPeople", 45, 50);
-            spriteBirds.SetUpdateSpeed(0, 0, 2);
+            spriteBirds = new GameObjects.Sprites(Content, "birdPeople", 45, 50,0);
+            spriteBirds.SetUpdateSpeed(0, 0, 0, 0, 250);
             objectsImages.Add(banana);
             objectsSprites.Add(spriteBirds);
             
@@ -63,15 +63,8 @@ namespace AnimalArmy
 
 
             KeyboardState ob = Keyboard.GetState();
-
-            if(ob.IsKeyDown(Keys.W))
-            {
-                banana.imageVector.X += 20;
-                banana.imageVector.Y += 10;
-            } 
-
+            spriteBirds.SetKeyboardState(ob);
             
-
             base.Update(gameTime);
         }
 
