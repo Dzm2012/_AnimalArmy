@@ -11,79 +11,88 @@ using Microsoft.Xna.Framework.Media;
 
 namespace AnimalArmy
 {
-    /// <summary>
-    /// This is the main type for your game
-    /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        GameTime GT;
+        GameObjects.Image banana;
+        GameObjects.Sprites spriteBirds;
+        List<GameObjects.Image> objectsImages = new List<GameObjects.Image>();
+        List<GameObjects.Sprites> objectsSprites = new List<GameObjects.Sprites>();
 
         public Game1()
         {
+            this.IsMouseVisible = true;
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferWidth = 1600;
+            graphics.PreferredBackBufferHeight = 900;
+            // /\ set game screen
             Content.RootDirectory = "Content";
-        }
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
+        }
+        
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
 
             base.Initialize();
         }
-
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
+        
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
+            banana = new GameObjects.Image(Content, "FAGNANA");
+            spriteBirds = new GameObjects.Sprites(Content, "birdPeople", 45, 50);
+            spriteBirds.SetUpdateSpeed(0, 0, 2);
+            objectsImages.Add(banana);
+            objectsSprites.Add(spriteBirds);
+            
         }
+        
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// all content.
-        /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            
         }
-
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            // TODO: Add your update logic here
+
+            KeyboardState ob = Keyboard.GetState();
+
+            if(ob.IsKeyDown(Keys.W))
+            {
+                banana.imageVector.X += 20;
+                banana.imageVector.Y += 10;
+            } 
+
+            
 
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GT = gameTime;
+            GraphicsDevice.Clear(Color.Black);
 
-            // TODO: Add your drawing code here
+            spriteBatch.Begin();
+            foreach (GameObjects.Image item in objectsImages)
+            {
+                spriteBatch.Draw(item.texTure, item.imageVector, Color.White);
+            }
+
+            foreach (GameObjects.Sprites item in objectsSprites)
+            {
+                spriteBatch.Draw(item.GetTexture2D(), item.imageVector, item.rec, Color.White);
+            }
+
+            spriteBatch.End();
+
 
             base.Draw(gameTime);
         }
