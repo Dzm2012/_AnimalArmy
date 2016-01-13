@@ -16,7 +16,7 @@ namespace AnimalArmy
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         GameTime GT;
-        GameObjects.Image banana;
+        Camera m_camera;
         GameObjects.Sprites spriteBirds;
         List<GameObjects.Image> objectsImages = new List<GameObjects.Image>();
         List<GameObjects.Sprites> objectsSprites = new List<GameObjects.Sprites>();
@@ -24,6 +24,7 @@ namespace AnimalArmy
         public Game1()
         {
             this.IsMouseVisible = true;
+            
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferWidth = 1600;
             graphics.PreferredBackBufferHeight = 900;
@@ -41,10 +42,8 @@ namespace AnimalArmy
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            banana = new GameObjects.Image(Content, "FAGNANA");
-            spriteBirds = new GameObjects.Sprites(Content, "birdPeople", 45, 50,0);
+            spriteBirds = new GameObjects.Sprites(Content, "birdPeople", 45, 50,0,45/2,50/2);
             spriteBirds.SetUpdateSpeed(0, 0, 0, 0, 250);
-            objectsImages.Add(banana);
             objectsSprites.Add(spriteBirds);
             
         }
@@ -72,8 +71,8 @@ namespace AnimalArmy
         {
             GT = gameTime;
             GraphicsDevice.Clear(Color.Black);
-
-            spriteBatch.Begin();
+            m_camera = new Camera(new Rectangle(0,0,1600,900));
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, m_camera.viewMatrix);
             foreach (GameObjects.Image item in objectsImages)
             {
                 spriteBatch.Draw(item.texTure, item.imageVector, Color.White);
@@ -88,6 +87,37 @@ namespace AnimalArmy
 
 
             base.Draw(gameTime);
+        }
+    }
+    public class Camera
+    {
+        public Matrix viewMatrix;
+        private Vector2 m_position;
+        private Vector2 m_halfViewSize;
+
+        public Camera(Rectangle clientRect)
+        {
+            m_halfViewSize = new Vector2(clientRect.Width * 0.5f, clientRect.Height * 0.5f);
+            UpdateViewMatrix();
+        }
+
+        public Vector2 Pos
+        {
+            get
+            {
+                return m_position;
+            }
+
+            set
+            {
+                m_position = value;
+                UpdateViewMatrix();
+            }
+        }
+
+        private void UpdateViewMatrix()
+        {
+            viewMatrix = Matrix.CreateTranslation(m_halfViewSize.X - m_position.X, m_halfViewSize.Y - m_position.Y, 0.0f);
         }
     }
 }

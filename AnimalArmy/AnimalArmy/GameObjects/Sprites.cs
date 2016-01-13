@@ -44,7 +44,7 @@ namespace AnimalArmy.GameObjects
         public DateTime nextUpdate;
         bool step = false;
         
-        public Sprites(ContentManager content, string resourceName, int width, int height, int firstImageColumn)
+        public Sprites(ContentManager content, string resourceName, int width, int height, int firstImageColumn, int locationX, int locationY)
         {
             currentImageRow = 0;
             currentImageColumn = 0;
@@ -52,7 +52,7 @@ namespace AnimalArmy.GameObjects
             Width = width;
             Height = height;
             this.firstImageColumn = firstImageColumn;
-            rec = new Rectangle(0, 0, Width, Height);
+            rec = new Rectangle(locationX, locationY, Width, Height);
         }
         public void updateRectangle(int column,int row)
         {
